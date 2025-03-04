@@ -8,34 +8,44 @@ async function setUndername() {
             throw new Error('wallet.json not found in the root of your project');
         }
         
-        // Check for manifest.json
-        if (!fs.existsSync('./manifest.json')) {
-            throw new Error('manifest.json not found. Please run `pnpm deploy` first');
-        }
+        // CUSTOMIZE THESE VALUES
+        // ======================
+        // The transaction ID of your deployed application
+        // This will be the output from your `npm run deploy` command
+        const targetTransactionId = '7lwwxXyM7CEEAahybBCRj9RC41NdQTUnvYLju6O4Xw8';
+        
+        // The process ID for ARNS
+        
+        const processId = 'VYYtivFa3eHvQGQD1d7q1QjYz5Nfxl3hMH-iwvQp5Gg';
+        
+        // Your desired undername (subdomain prefix)
+        // This will create a URL like: https://YOUR_UNDERNAME_<your-primary-name>.ar.io
+        const undername = 'ethdenver';
+        // ======================
+        
+        console.log(`Using target transaction ID: ${targetTransactionId}`);
+        console.log(`Using process ID: ${processId}`);
 
         const jwk = JSON.parse(fs.readFileSync('./wallet.json', 'utf8'));
-        const manifest = JSON.parse(fs.readFileSync('./manifest.json', 'utf8'));
         
-        if (!manifest.id) {
-            throw new Error('No manifest ID found in manifest.json. Please deploy your site first');
-        }
-
-        console.log(`Using manifest ID: ${manifest.id}`);
-
+        // Initialize the ANT with the process ID
         const ant = ANT.init({
             signer: new ArweaveSigner(jwk),
-            processId: 'YOUR_PROCESS_ID_HERE'
+            processId: processId
         });
 
+        console.log(`Setting undername: ${undername}`);
+
+        // Create the undername record
         const { id: txId } = await ant.setUndernameRecord({
-            undername: 'dapp', // You might want to make this configurable
-            transactionId: manifest.id,
+            undername: undername,
+            transactionId: targetTransactionId,
             ttlSeconds: 900 // 15 minutes
         });
 
         console.log('\nUndername Record Update Complete! 🎉');
         console.log(`Transaction ID: ${txId}`);
-        console.log(`View your deployment at: https://dapp_YOUR_NAME.ar.io\n`);
+        console.log(`Once propagated, your app will be available at: https://${undername}_<your-primary-name>.ar.io`);
     } catch (error) {
         console.error('Failed to update undername record:', error);
         process.exit(1);

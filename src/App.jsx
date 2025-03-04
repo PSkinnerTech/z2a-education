@@ -1,6 +1,7 @@
 import NavBar from './components/NavBar';
 import { useConnection } from '@arweave-wallet-kit/react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { TypeAnimation } from 'react-type-animation';
 import './App.css';
 
 function App() {
@@ -14,9 +15,31 @@ function App() {
         <Route path="/" element={
           <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)]">
-              <h1 className="text-3xl font-bold mb-8">
-                Welcome to the "Zero to Arweave Starter Kit"
+              <h1 className="text-3xl font-bold mb-2 flex items-center gap-2">
+                You could just...{' '}
+                <TypeAnimation
+                  sequence={[
+                    3000,
+                    'build things',
+                  ]}
+                  wrapper="span"
+                  cursor={true}
+                  repeat={0}
+                  style={{ display: 'inline-block' }}
+                />
               </h1>
+              <div className="text-xl text-gray-600 mb-8">
+                <TypeAnimation
+                  sequence={[
+                    5000,
+                    'But, you have to learn how to first.',
+                  ]}
+                  wrapper="span"
+                  cursor={true}
+                  repeat={0}
+                  style={{ display: 'inline-block' }}
+                />
+              </div>
               
               {connected ? (
                 <div className="mt-8 text-center">
